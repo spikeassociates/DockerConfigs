@@ -1,0 +1,92 @@
+version: "2"
+
+networks:
+  gitea:
+    external: true
+
+services:
+  server:
+    image: gitea/gitea:latest
+    environment:
+      - USER_UID=112
+      - USER_GID=118
+      - DB_TYPE=mysql
+      - DB_HOST=db:3306
+      - DB_NAME=dbname
+      - DB_USER=dbuser
+      - DB_PASSWD=dbpass
+    restart: always
+    networks:
+      - gitea
+    volumes:
+      - ./gitea:/data
+    ports:
+      - "3000:3000"
+      - "3002:22"
+    depends_on:
+      - db
+
+  db:
+    image: mysql:5.7
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpass
+      - MYSQL_USER=dbuser
+      - MYSQL_PASSWORD=dbpass
+      - MYSQL_DATABASE=dbname
+    networks:
+      - gitea
+    volumes:
+      - ./mysql:/var/lib/mysql
+
+  drone-server:
+    image: drone/drone:latest
+    container_name: drone-server
+    ports:
+      - 3001:80
+    volumes:
+      - ./drone:/var/lib/drone/
+      - ./dronedata:/data/
+    restart: always
+    depends_on:
+      - server
+    environment:
+      - DRONE_OPEN=true
+      - DRONE_DEBUG=true
+      - DRONE_LOGS_DEBUG=true
+      - DRONE_HOST=http://server_external_ip:3001
+      - DRONE_SERVER_HOST=server_external_ip:3001
+      - DRONE_SERVER_PROTO=http
+      - DRONE_GIT_ALWAYS_AUTH=true
+      - DRONE_GITEA=true
+      - DRONE_GITEA_URL=http://server_external_ip:3000
+      - DRONE_GITEA_SERVER=http://server_external_ip:3000
+      - DRONE_GITEA_CLIENT_ID=get this from you gitea oauth
+      - DRONE_GITEA_CLIENT_SECRET=get this from you gitea oauth
+      - DRONE_RPC_SECRET=<shared secret>
+      - DRONE_SECRET=<shared secret>
+      - DRONE_NETWORK=gitea
+      - DRONE_AGENTS_ENABLED=true
+    networks:
+      - gitea
+
+  drone-agent:
+    image: drone/agent:linux-amd64
+    container_name: drone-agent
+    command: agent
+    restart: always
+    depends_on:
+      - drone-server
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - DRONE_DEBUG=true
+      - DRONE_UI_DISABLE=false
+      - DRONE_SERVER=drone-server:9000
+      - DRONE_RPC_HOST=drone-server
+      - DRONE_RPC_PROTO=http
+      - DRONE_RPC_SECRET=<shared secret>
+      - DRONE_SECRET=<shared secret>
+    networks:
+      - gitea
+
