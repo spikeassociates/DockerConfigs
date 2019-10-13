@@ -4,7 +4,7 @@
 
 - install docker-compose
 - clone or download this directory "as is"
-- copy [the coreBOS test database](https://github.com/tsolucio/coreBOSTests/blob/master/database/coreBOSTests.sql) into the cbconf directory **witht the name `cbdemo.sql`
+- copy [the coreBOS test database](https://github.com/tsolucio/coreBOSTests/blob/master/database/coreBOSTests.sql) into the cbconf directory **with the name `cbdemo.sql`**
 - start the demo with `docker-compose up -d`
 - as usual, access corebos, go to corebos updater, load and apply all
 
