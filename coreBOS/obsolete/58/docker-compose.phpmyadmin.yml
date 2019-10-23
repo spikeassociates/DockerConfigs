@@ -1,0 +1,10 @@
+version: '2'
+services:
+  compose-phpMyAdmin:
+    depends_on:
+      - compose-corebos-db
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - "8004:80"
+    links:
+      - compose-corebos-db:db
