@@ -1,0 +1,34 @@
+version: '2'
+services:
+  compose-corebos-storage:
+    image: busybox
+    volumes:
+      - ./docker/db_volumes:/var/lib/mysql
+  compose-corebos-db:
+    image: mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+    volumes_from:
+      - compose-corebos-storage
+    volumes:
+      - ./docker/mysql/conf.d:/usr/local/mysqlconf
+      - ./docker/mysql/sql:/docker-entrypoint-initdb.d
+    command: >
+      bash -c "
+      cp /usr/local/mysqlconf/*.cnf /etc/mysql/conf.d/
+      && chmod 644 /etc/mysql/conf.d/*.cnf
+      && /entrypoint.sh mysqld"
+    depends_on:
+      - compose-corebos-storage
+  compose-corebos-web:
+    build: ./docker/app
+    image: compose-corebos-web:latest
+    ports:
+     - "8003:80"
+    volumes:
+     - ./core:/var/www/corebos
+    depends_on:
+     - compose-corebos-db
+    links:
+     - compose-corebos-db:db
