@@ -17,17 +17,29 @@ The extensions I have installed are:
 - Auto Close Tag
 - Auto Rename Tag
 - Bracket Pair Colorizer 2
+- Context Switcher
+- Copy/Paste Detector
 - Docker
 - Eclipse Keymap (I have spent many years working with eclipse)
 - ESLint
 - Go
 - GraphQL
+- Hide Gitignored
 - HTML CSS Support
 - IntelliSense for CSS class names
 - lit-html
+- Markdown preview Mermaid Support
+- Markdownlint
+- MySQL
+- MySQL Syntax
+- OpenAPI (Swagger) editor
 - PHP Debug and Extension Pack
+- PHP Intelephense
 - phpcs
 - Project Manager
 - Smarty
+- Svelte
 - XML Format and Tools
-- mardownlint
+- YAML
+
+![installed extensions](https://github.com/spikeassociates/DockerConfigs/VisualStudioCode/VisualStudioCode/VSCInstalledPackages.gif)
