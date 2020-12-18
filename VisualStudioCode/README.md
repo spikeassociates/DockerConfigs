@@ -42,4 +42,4 @@ The extensions I have installed are:
 - XML Format and Tools
 - YAML
 
-![installed extensions](VisualStudioCode/VSCInstalledPackages.gif)
+![installed extensions](VSCInstalledPackages.gif)
